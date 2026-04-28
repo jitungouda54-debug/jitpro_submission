@@ -1,0 +1,131 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart - Lenskart Clone</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="cart">
+  <!-- Announcement Bar -->
+  <div class="announcement-bar">
+    Free home eye check-up with every order above Rs. 1499 &nbsp;|&nbsp; Use code LENS10 for 10% off
+  </div>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.jsp" class="logo">
+        <div class="logo-icon">👁</div>
+        <span class="logo-text">Lenskart</span>
+      </a>
+      <div class="search-bar">
+        <input type="search" placeholder="Search for eyeglasses..." />
+        <button class="search-btn">🔍</button>
+      </div>
+      <ul class="nav-links">
+        <li><a href="products.jsp?cat=Eyeglasses">Eyeglasses</a></li>
+        <li><a href="products.jsp?cat=Sunglasses">Sunglasses</a></li>
+        <li><a href="products.jsp?cat=Contact+Lenses">Contact Lenses</a></li>
+      </ul>
+      <div class="nav-actions">
+        <% if (session.getAttribute("user_id") != null) { %>
+          <a href="profile.jsp">👤 <span><%= session.getAttribute("user_name") %></span></a>
+          <a href="logout.jsp" style="font-size: 12px; color: #777;">Logout</a>
+        <% } else { %>
+          <a href="login.jsp" title="Sign In">👤 <span>Sign In</span></a>
+        <% } %>
+        <a href="cart.jsp" style="position:relative;color:#006761;font-weight:700;">
+          🛒 <span>Cart</span>
+          <span class="cart-badge" style="display:none">0</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="index.jsp">Home</a> › Shopping Cart
+    </div>
+  </div>
+  <!-- Empty Cart State -->
+  <div id="cart-empty" class="empty-state" style="display:none;">
+    <div class="empty-icon">🛒</div>
+    <h2>Your cart is empty</h2>
+    <p>Add some eyewear to get started!</p>
+    <a href="products.jsp" class="btn btn-primary">Browse Products</a>
+  </div>
+  <!-- Cart Main Layout -->
+  <div class="cart-layout" id="cart-main" style="display:none;">
+    <div>
+      <h1 style="font-size:22px;font-weight:900;margin-bottom:20px;color:#111;">
+        Shopping Cart <span id="cart-count" style="font-weight:400;font-size:15px;color:#888;"></span>
+      </h1>
+      <div class="cart-items" id="cart-items">
+        <!-- Rendered by script.js -->
+      </div>
+      <div style="margin-top:20px;">
+        <a href="products.html" style="color:#006761;font-size:14px;font-weight:600;">‹ Continue Shopping</a>
+      </div>
+    </div>
+    <!-- Order Summary -->
+    <div class="cart-summary">
+      <h2>Order Summary</h2>
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span id="cart-subtotal">Rs. 0</span>
+      </div>
+      <div class="summary-row savings">
+        <span>You save</span>
+        <span id="cart-savings">Rs. 0</span>
+      </div>
+      <div class="summary-row">
+        <span>Delivery</span>
+        <span id="cart-delivery">Rs. 99</span>
+      </div>
+      <div style="font-size:12px;color:#999;background:#f9f9f9;padding:8px 10px;border-radius:8px;margin-top:6px;">
+        Free delivery on orders above Rs. 999
+      </div>
+      <div class="summary-row total">
+        <span>Total</span>
+        <span id="cart-total">Rs. 0</span>
+      </div>
+      <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+      <p style="text-align:center;font-size:11px;color:#bbb;margin-top:10px;">Secure checkout · Free 14-day returns</p>
+    </div>
+  </div>
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="logo-text">Lenskart</div>
+        <p>India's largest eyewear platform.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="products.jsp?cat=Eyeglasses">Eyeglasses</a></li>
+          <li><a href="products.jspl?cat=Sunglasses">Sunglasses</a></li>
+        </ul>
+      </div>
+      <div class="footer-col"><h4>Help</h4><ul><li><a href="#">Track Order</a></li></ul></div>
+      <div class="footer-col"><h4>Account</h4><ul><li><a href="login.jsp">Sign In</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">&copy; 2024 Lenskart Clone</div>
+  </footer>
+  <script src="script.js"></script>
+  <script>
+    function checkout() {
+        const cart = JSON.parse(localStorage.getItem('lk_cart') || '[]');
+        if (!cart.length) {
+          alert('Your cart is empty.');
+          return;
+        }
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        const delivery = subtotal >= 999 ? 0 : 99;
+        const total = (subtotal + delivery).toFixed(2);
+        window.location.href = 'checkout.jsp?total=' + encodeURIComponent(total);
+    }
+  </script>
+</body>
+</html>

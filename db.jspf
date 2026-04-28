@@ -1,0 +1,19 @@
+<%@ page import="java.sql.Connection" %>
+<%@ page import="java.sql.DriverManager" %>
+<%!
+    private String envOrDefault(String key, String defaultValue) {
+        String value = System.getenv(key);
+        if (value == null || value.trim().isEmpty()) {
+            return defaultValue;
+        }
+        return value.trim();
+    }
+
+    private Connection getDbConnection() throws Exception {
+        String dbUrl = envOrDefault("LK_DB_URL", "jdbc:postgresql://localhost:5432/lenskart_db");
+        String dbUser = envOrDefault("LK_DB_USER", "postgres");
+        String dbPass = envOrDefault("LK_DB_PASS", "jitun@321");
+        Class.forName("org.postgresql.Driver");
+        return DriverManager.getConnection(dbUrl, dbUser, dbPass);
+    }
+%>
